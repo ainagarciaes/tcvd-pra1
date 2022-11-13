@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import pandas as pd
 import scrapy
 import requests
@@ -16,9 +10,6 @@ import re
 # guardar el dataset en format csv
 def store_dataset(filename, ds):
     ds.to_csv(filename, index=None);
-
-
-# In[22]:
 
 
 def html_parser(URL: str):
@@ -39,7 +30,7 @@ def url_indicador(URL: str,indicadors: list, indicador: str) -> str:
             indi_url = a.get('href')
     return URL+indi_url
 
-def busca_urls_pais(URL: str, indicador: str):
+def preu_al_consumidor(URL: str, indicador: str):
     p = []
     names = []
     tag_a = tag_a_indicadors(URL)
@@ -78,7 +69,7 @@ def busca_urls_pais(URL: str, indicador: str):
         df["pais"] = paisos
     return taula_preus(df["url"], df["pais"])
 
-def busca_url_internacional(URL: str, indicador: str) -> list:
+def preu_OPEP(URL: str, indicador: str) -> list:
     taula_total = pd.DataFrame()
     tag_a = tag_a_indicadors(URL)
     indicador_url = url_indicador(URL, tag_a, indicador)
@@ -155,16 +146,13 @@ def taula_preus(URL: list, PAIS: list) -> pd.DataFrame:
     return taula_total
 
 
-# In[23]:
-
-
 URL = "https://www.datosmacro.com"
-data = busca_urls_pais(URL,'Precios al consumidor de productos petrolíferos')
-store_dataset('dades.csv', data)
+data = preu_al_consumidor(URL,'Precios al consumidor de productos petrolíferos')
+store_dataset('preus_petroli_consumidor.csv', data)
 
 
 # In[ ]:
-data = busca_url_internacional(URL, 'Precio del petróleo OPEP')
-store_dataset("barrils.csv", data)
+data = preu_OPEP(URL, 'Precio del petróleo OPEP')
+store_dataset("preus_barrils_OPEP.csv", data)
 
 
